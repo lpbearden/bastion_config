@@ -16,6 +16,7 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - VERSION=docker
+  
   sabnzbd:
     image: linuxserver/sabnzbd
     container_name: sabnzbd
@@ -29,6 +30,7 @@ services:
       - 27020:8080
       - 27021:9090
     restart: always
+  
   sonarr:
     image: linuxserver/sonarr
     container_name: sonarr
@@ -45,6 +47,7 @@ services:
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
+  
   radarr:
     image: linuxserver/radarr
     container_name: radarr
@@ -61,6 +64,7 @@ services:
       - PGID=${PGID}
     restart:
       always
+  
   portainer:
     image: portainer/portainer
     container_name: portainer
@@ -71,3 +75,26 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart:
       always
+
+
+  delugevpn:
+    image: binhex/arch-delugevpn
+    container_name: delugevpn
+    ports:
+      - 8112:8112
+      - 8118:8118
+      - 58846:58846
+      - 58946:58946
+    volumes:
+      - /opt/deluge:/config
+      - /mnt/storage/downloads:/downloads
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - VPN_ENABLED=yes
+      - VPN_USER
+      - VPN_PASS
+      - VPN_PROV=custom
+      - NAME_SERVERS=209.222.18.222,84.200.69.80,37.235.1.174,1.1.1.1,209.222.18.218,37.235.1.177,84.200.70.40,1.0.0.1
+      - ENABLE_PRIVOXY=yes
+      - LAN_NETWORK=192.168.1.0/24
