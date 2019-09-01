@@ -76,3 +76,16 @@ services:
     restart:
       always
 
+  tautulli:
+    image: linuxserver/tautulli
+    container_name: tautulli
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=America/Indiana/Indianapolis
+    volumes:
+      - /opt/tautulli:/config
+      - /opt/plex/Library/Application\ Support/Plex\ Media\ Server/Logs:/logs
+    ports:
+      - 8181:8181
+    restart: unless-stopped
