@@ -89,3 +89,74 @@ services:
     ports:
       - 8181:8181
     restart: unless-stopped
+  
+  lazylibrarian:
+    image: linuxserver/lazylibrarian
+    container_name: lazylibrarian
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=America/Indiana/Indianapolis
+    volumes:
+      - /opt/lazylibrarian:/config
+      - /mnt/storage/downloads:/downloads
+      - /mnt/storage/books:/books
+    ports:
+      - 5299:5299
+    restart: unless-stopped
+
+  ombi:
+    image: linuxserver/ombi
+    container_name: ombi
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=America/Indiana/Indianapolis
+    volumes:
+      - /opt/ombi/:/config
+    ports:
+      - 3579:3579
+    restart: unless-stopped
+
+  calibre:
+    image: linuxserver/calibre
+    container_name: calibre
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=America/Indiana/Indianapolis
+    volumes:
+      - /opt/calibre:/config
+    ports:
+      - 27025:8080
+      - 27026:8081
+    restart: unless-stopped
+
+  # calibre-web:
+  #   image: linuxserver/calibre-web
+  #   container_name: calibre-web
+  #   environment:
+  #     - PUID=${PUID}
+  #     - PGID=${PGID}
+  #     - TZ=America/Indiana/Indianapolis
+  #     - DOCKER_MODS=linuxserver/calibre-web:calibre
+  #   volumes:
+  #     - /opt/calibre_web/:/config
+  #     - :/books
+  #   ports:
+  #     - 8083:8083
+  #   restart: unless-stopped
+
+  heimdall:
+    image: linuxserver/heimdall
+    container_name: heimdall
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=America/Indiana/Indianapolis
+    volumes:
+      - /path/to/appdata/config:/config
+    ports:
+      - 27030:80
+      - 27031:443
+    restart: unless-stopped
