@@ -97,6 +97,7 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=America/Indiana/Indianapolis
+      - DOCKER_MODS=linuxserver/calibre-web:calibre
     volumes:
       - /opt/lazylibrarian:/config
       - /mnt/storage/downloads:/downloads
@@ -132,20 +133,20 @@ services:
       - 27026:8081
     restart: unless-stopped
 
-  # calibre-web:
-  #   image: linuxserver/calibre-web
-  #   container_name: calibre-web
-  #   environment:
-  #     - PUID=${PUID}
-  #     - PGID=${PGID}
-  #     - TZ=America/Indiana/Indianapolis
-  #     - DOCKER_MODS=linuxserver/calibre-web:calibre
-  #   volumes:
-  #     - /opt/calibre_web/:/config
-  #     - :/books
-  #   ports:
-  #     - 8083:8083
-  #   restart: unless-stopped
+  calibre-web:
+    image: linuxserver/calibre-web
+    container_name: calibre-web
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=America/Indiana/Indianapolis
+      - DOCKER_MODS=linuxserver/calibre-web:calibre
+    volumes:
+      - /opt/calibre_web:/config
+      - /opt/calibre/Calibre\ Library:/books
+    ports:
+      - 27027:8083
+    restart: unless-stopped
 
   heimdall:
     image: linuxserver/heimdall
