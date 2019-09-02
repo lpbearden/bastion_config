@@ -85,7 +85,7 @@ services:
       - TZ=America/Indiana/Indianapolis
     volumes:
       - /opt/tautulli:/config
-      - /opt/plex/Library/'Application Support'/'Plex Media Server'/Logs:/logs
+      - /opt/plex/Library/Application Support/Plex Media Server/Logs:/logs
     ports:
       - 8181:8181
     restart: unless-stopped
@@ -126,6 +126,8 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=America/Indiana/Indianapolis
+      - GUAC_USER=agenta
+      - GUAC_PASS=d3ed5c9ca8c3b8d86262fd26ceb582b6
     volumes:
       - /opt/calibre:/config
     ports:
@@ -143,7 +145,7 @@ services:
       - DOCKER_MODS=linuxserver/calibre-web:calibre
     volumes:
       - /opt/calibre_web:/config
-      - /opt/calibre/'Calibre Library':/books
+      - /opt/calibre/Calibre Library:/books
     ports:
       - 27027:8083
     restart: unless-stopped
