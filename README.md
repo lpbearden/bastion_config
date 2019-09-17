@@ -8,13 +8,17 @@
     - [ ] Ensure Deluge only runs via VPN
 * Setup OMBI
 * Export and save handbrake presets
-* Setup Varken / Grafana
-* Setup Watchtower
-* Look into PlexTogether
+
+
 
 ##### Server:
-- [ ] Setup Traefik
-- [ ] Setup URL / domain to access outside of network
 - [ ] Setup Cockpit UI
 - [ ] Setup piHole
 - [ ] Setup pfSense
+- [ ] Setup Watchtower (method to updated containers)
+- [ ] Setup Varken / Grafana
+- [ ] Look into Davos (FTP automation)
+- External access: 
+    - [ ] Reverse proxy setup w/ Let's Encrypt container
+    - [ ] Setup Traefik
+    - [ ] Setup URL / domain
