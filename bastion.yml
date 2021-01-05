@@ -244,7 +244,37 @@ services:
       - /opt/deluge:/config
       - /mnt/storage/downloads:/downloads
     restart: unless-stopped
+  
+  makemkv:
+    image: jlesage/makemkv
+    container_name: makemkv
+    ports:
+      - 5800:5800
+    volumes:
+      - /opt/MakeMKV:/config
+      - /mnt/storage:/storage
+      - /mnt/storage/MakeMKV/output:/output
+    devices:
+      - /dev/sr0:/dev/sr0
+      - /dev/sg6:/dev/sg6
 
+  jellyfin:
+    image: linuxserver/jellyfin
+    container_name: jellyfin
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=America/Indiana/Indianapolis
+      - UMASK_SET=022 #optional
+    volumes:
+      - /opt/jellyfin:/config
+      - /mnt/storage/tv:/data/tvshows
+      - /mnt/storage/movies:/data/movies
+      - /opt/vc/lib:/opt/vc/lib #optional
+      - /mnt/storage/anime:/data/anime
+    ports:
+      - 8096:8096
+    restart: unless-stopped
 
 networks:
   default:
