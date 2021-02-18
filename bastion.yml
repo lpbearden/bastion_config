@@ -256,7 +256,7 @@ services:
       - /mnt/storage/MakeMKV/output:/output
     devices:
       - /dev/sr0:/dev/sr0
-      - /dev/sg6:/dev/sg6
+      - /dev/sg5:/dev/sg5
 
   jellyfin:
     image: linuxserver/jellyfin
@@ -274,6 +274,24 @@ services:
       - /mnt/storage/anime:/data/anime
     ports:
       - 8096:8096
+    restart: unless-stopped
+
+  bazarr:
+    image: ghcr.io/linuxserver/bazarr
+    container_name: bazarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=America/Indiana/Indianapolis
+      - UMASK_SET=022 #optional
+    volumes:
+      - /opt/bazarr:/config
+      - /mnt/storage/movies:/movies
+      - /mnt/storage/tv:/tv
+      - /mnt/storage/4k_movies:/4k_movies
+      - /mnt/storage/anime:/anime
+    ports:
+      - 6767:6767
     restart: unless-stopped
 
 networks:
