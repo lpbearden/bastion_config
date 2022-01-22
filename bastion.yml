@@ -278,7 +278,8 @@ services:
       - "traefik.enable=true"
       ## HTTP Routers Auth Bypass
       - "traefik.http.routers.tautulli-rtr-bypass.entrypoints=https"
-      - "traefik.http.routers.tautulli-rtr-bypass.rule=Host(`tautulli.$DOMAINNAME`) && (Headers(`X-Api-Key`, `$TAUTULLI_API_KEY`) || Query(`apikey`, `$TAUTULLI_API_KEY`))"
+      # - "traefik.http.routers.tautulli-rtr-bypass.rule=Host(`tautulli.$DOMAINNAME`) && (Headers(`X-Api-Key`, `$TAUTULLI_API_KEY`) || Query(`apikey`, `$TAUTULLI_API_KEY`))"
+      - "traefik.http.routers.tautulli-rtr-bypass.rule=Host(`tautulli.$DOMAINNAME`) && (Headers(`X-Api-Key`, `$TAUTULLI_DEVICE_TOKEN`) || Query(`apikey`, `$TAUTULLI_DEVICE_TOKEN`))"
       - "traefik.http.routers.tautulli-rtr-bypass.priority=100"
       - "traefik.http.routers.tautulli-rtr-bypass.tls=true"
       ## HTTP Routers
@@ -287,6 +288,7 @@ services:
       - "traefik.http.routers.tautulli-rtr.tls=true"
       ## Middlewares
       - "traefik.http.routers.tautulli-rtr.middlewares=chain-oauth@file"
+      - "traefik.http.routers.tautulli-rtr-bypass.middlewares=chain-no-auth@file"
       ## HTTP Services
       - "traefik.http.routers.tautulli-rtr.service=tautulli-svc"
       - "traefik.http.routers.tautulli-rtr-bypass.service=tautulli-svc"
@@ -330,7 +332,7 @@ services:
       - /mnt/storage/MakeMKV/output:/output
     devices:
       - /dev/sr0:/dev/sr0
-      - /dev/sg5:/dev/sg5
+      - /dev/sg2:/dev/sg2
 
   bazarr:
     image: ghcr.io/linuxserver/bazarr
@@ -349,3 +351,41 @@ services:
     ports:
       - 6767:6767
     restart: unless-stopped
+
+  transmission-openvpn:
+    container_name: transmission-openvpn
+    image: haugene/transmission-openvpn
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - /opt/transmission:/config
+      - /mnt/storage/downloads:/downloads
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - OPENVPN_PROVIDER=PIA
+      - OPENVPN_USERNAME=${VPN_USER}
+      - OPENVPN_PASSWORD=${VPN_PASSWORD}
+      - LOCAL_NETWORK=192.168.1.0/24
+      - OPENVPN_CONFIG=us_chicago
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+    ports:
+      - 9091:9091
+
+  jackett:
+    container_name: jackett
+    image: linuxserver/jackett:latest
+    restart: unless-stopped
+    ports:
+      - 9117:9117
+    environment:
+      - PUID=${PUID} # default user id, defined in .env
+      - PGID=${PGID} # default group id, defined in .env
+      - TZ=${TZ}
+    volumes:
+      - /mnt/storage/downloads/torrent-blackhole:/downloads
+      - /opt/jackett:/config
